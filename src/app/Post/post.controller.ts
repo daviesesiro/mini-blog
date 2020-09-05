@@ -2,7 +2,7 @@ import { Controller } from "../../core/controller";
 import { Router, RequestHandler } from "express";
 import { PostService } from "./post.service";
 import Respond from "../../services/Respond";
-import { HttpException } from "../../exceptions/HttpException";
+import { HttpException } from "../../core/exceptions/HttpException";
 import { createPostValidator } from "./post.validators";
 import { validationResult } from "express-validator";
 import { CreatePostDto } from "./dtos/CreatePostDto";
