@@ -55,7 +55,7 @@ export class ExpressApp {
     this.app.use(errorMiddleware);
   }
 
-  private async inititializeDatabase() {
+  public async inititializeDatabase() {
     await createConnection();
   }
 
