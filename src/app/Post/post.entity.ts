@@ -9,7 +9,7 @@ export class Post extends BaseEntity {
   @Column()
   title: string;
 
-  @Column()
+  @Column('blob')
   image: string;
 
   @Column()

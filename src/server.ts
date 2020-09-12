@@ -4,6 +4,7 @@ import cors from "cors";
 import { Controller } from "./core/controller";
 import { createConnection } from "typeorm";
 import errorMiddleware from "./middlewares/error.middleware";
+import cookieParser from "cookie-parser";
 
 export class ExpressApp {
   app: Application;
@@ -20,6 +21,7 @@ export class ExpressApp {
     this.inititializeDatabase();
     this.initializeMiddleware();
     this.initialiseRoutes(controllers);
+    this.handlRouteNotFound();
     this.handleExceptions();
   }
 
@@ -37,9 +39,17 @@ export class ExpressApp {
   /**
    * Initialises all the middlewares
    */
-  public initializeMiddleware() {
+  private initializeMiddleware() {
     this.app.use(express.json());
-    this.app.use(cors());
+    this.app.use(express.urlencoded({ extended: false }));
+    this.app.use(cors({ credentials: true }));
+    this.app.use(cookieParser());
+  }
+
+  private handlRouteNotFound() {
+    this.app.use((_req, res) => {
+      res.send("Route not found")
+    })
   }
 
   /**
