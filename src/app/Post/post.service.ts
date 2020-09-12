@@ -4,7 +4,7 @@ import { NotFoundException } from "../../core/exceptions/NotFoundException";
 import { PaginateDto } from "./dtos/paginateDto";
 export class PostService {
   /**
-   * Get all the posts
+   * Gets posts
    */
   public async getPosts(paginateDto: PaginateDto) {
     let { take, skip } = paginateDto;
