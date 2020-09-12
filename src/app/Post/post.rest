@@ -1,7 +1,7 @@
-POST http://localhost:3232/posts
+DELETE  http://localhost:3202/posts/13
 Content-Type: application/json
 
 {
     "title": "first post",
-    "content":"hello"
+    "content":"" 
 }

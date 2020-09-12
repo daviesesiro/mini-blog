@@ -15,7 +15,7 @@ export class HttpException extends Error {
    */
   constructor(httpError: IHttpError) {
     super(httpError.message);
-    this.type = "UnknownError";
+    this.type = httpError.type ? httpError.type : "UnknownError";
     this.status = httpError.status;
     this.data = httpError.data;
     this.message = httpError.message;

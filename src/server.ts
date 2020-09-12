@@ -9,7 +9,7 @@ export class ExpressApp {
   app: Application;
   port: number = 4000;
 
-  /**
+  /** 
    * Constructor
    * @param controllers
    * @param loaders extra middlewares or configuration
