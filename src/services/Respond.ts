@@ -1,6 +1,6 @@
 import { Response } from "express";
 
-class Respond {
+export class Respond {
   res: Response;
 
   constructor(res: Response) {

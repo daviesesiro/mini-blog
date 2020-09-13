@@ -2,6 +2,9 @@ import { Post } from "./post.entity";
 import { CreatePostDto } from "./dtos/CreatePostDto";
 import { NotFoundException } from "../../core/exceptions/NotFoundException";
 import { PaginateDto } from "./dtos/paginateDto";
+import { User } from "../Auth/user.entity";
+
+
 export class PostService {
   /**
    * Gets posts
@@ -19,7 +22,7 @@ export class PostService {
   }
 
   public async getPostById(id: number) {
-    const post = await Post.findOne(id, { select: ["id", "content", "title", "createdAt"] });
+    const post = await Post.findOne(id, { select: ["id", "content", "title", "createdAt"], relations: ['comments'] });
 
     if (!post) {
       throw new NotFoundException(id, 'post');
@@ -38,14 +41,18 @@ export class PostService {
     return post.image;
   }
 
-  public async createPost(createPostDto: CreatePostDto, file: any) {
+  public async createPost(createPostDto: CreatePostDto, file: any, user: User) {
 
     const post = new Post();
     post.title = createPostDto.title;
     post.image = file.buffer;
     post.content = createPostDto.content;
+    post.userId = user.id;
+    await post.save()
 
-    return await post.save();
+    delete post.image;
+
+    return post;
   }
 
   public async deletePost(id: number): Promise<void> {

@@ -6,10 +6,11 @@ import Respond from "../../services/Respond";
 import {
   checkCreatePost,
   checkDeletePost,
-} from "./post.validators";
+} from "./post.checks";
 
 import { upload } from "./uploadimage";
-import validateChecks from "../../services/checkvalidator";
+import validateChecks from "../../services/validateChecks";
+import { isAuth } from "../Auth/isAuth";
 
 export class PostController extends Controller {
   path = "/posts";
@@ -24,8 +25,8 @@ export class PostController extends Controller {
     this.router.get("/", this.getPosts);
     this.router.get("/:id", this.getPostById);
     this.router.get('/:id/image', this.getPostImage)
-    this.router.post("/", upload.single('image'), checkCreatePost, this.createPost);
-    this.router.delete("/:id", checkDeletePost, this.deletePost);
+    this.router.post("/", isAuth, upload.single('image'), checkCreatePost, this.createPost);
+    this.router.delete("/:id", isAuth, checkDeletePost, this.deletePost);
   }
 
   private getPosts: RequestHandler = async (req, res, next) => {
@@ -60,11 +61,11 @@ export class PostController extends Controller {
     }
   }
 
-  private createPost: RequestHandler = async (req, res, next) => {
+  private createPost: RequestHandler = async (req: any, res, next) => {
     try {
       validateChecks(req, 'post');
-      const post = await this.postService.createPost(req.body, req.file);
-      Respond(res).Success(202, "Post created", post);
+      const post = await this.postService.createPost(req.body, req.file, req.user);
+      Respond(res).Success(201, "Post created", post);
 
     } catch (e) {
       next(e);

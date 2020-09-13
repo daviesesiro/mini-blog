@@ -1,7 +1,0 @@
-DELETE  http://localhost:3202/posts/16/image
-Content-Type: application/json
-
-{
-    "title": "first post",
-    "content":"" 
-}

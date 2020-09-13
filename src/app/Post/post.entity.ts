@@ -1,5 +1,6 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column } from "typeorm";
-// import { User } from "./User";
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from "typeorm";
+import { Comment } from "../Comment/comment.entity";
+import { User } from "../Auth/user.entity";
 
 @Entity("posts")
 export class Post extends BaseEntity {
@@ -10,10 +11,19 @@ export class Post extends BaseEntity {
   title: string;
 
   @Column('blob')
-  image: string;
+  image?: string;
 
   @Column()
   content: string;
+
+  @ManyToOne(() => User, user => user.posts)
+  user: User
+
+  @Column()
+  userId: number
+
+  @OneToMany(() => Comment, comment => comment.post)
+  comments: Comment[]
 
   @Column({
     type: "datetime",

@@ -7,6 +7,10 @@ import { UserNotFound } from '../../core/exceptions/UserNotFound';
 import { HttpException } from '../../core/exceptions/HttpException';
 import { Unauthenticated } from '../../core/exceptions/UnAuthenticated';
 import { verify } from 'jsonwebtoken';
+import { JwtResfreshTokenPayload } from './user.interfaces';
+
+
+
 export class AuthService {
 
     public async signup(createUserDto: CreateUserDto) {
@@ -25,6 +29,7 @@ export class AuthService {
             throw e
         }
     }
+
     public async signin(signinUserDto: SigninUserDto) {
         const user = await User.findOne({ email: signinUserDto.email })
 
@@ -46,22 +51,29 @@ export class AuthService {
         if (!token) {
             throw new Unauthenticated()
         }
-        const payload: any = verify(token, process.env.REFRESH_TOKEN_SECRET!);
 
-        const user = await User.findOne(payload.UserId)
+        let payload: JwtResfreshTokenPayload;
+
+        try {
+            payload = verify(token, process.env.REFRESH_TOKEN_SECRET!) as JwtResfreshTokenPayload;
+        } catch (e) {
+            throw new Unauthenticated()
+        }
+        const user = await User.findOne(payload.userId)
 
         if (!user) {
             throw new UserNotFound()
         }
 
-        if (!user.tokenVersion === payload.tokenVersion) {
+        if (user.tokenVersion !== payload.tokenVersion) {
             throw new Unauthenticated()
         }
 
 
-        const acccessToken = this.generateAccessToken(user.id, user.email);
+        const accessToken = this.generateAccessToken(user.id, user.email);
+        const refreshToken = this.generateRefreshToken(user.id, user.tokenVersion);
 
-        return acccessToken
+        return { accessToken, refreshToken }
     }
 
     public async validatePassword(password: string, hashedPassword: string) {
@@ -74,7 +86,12 @@ export class AuthService {
     }
 
     public generateRefreshToken(userId: number, tokenVersion: number) {
-        return sign({ userId, tokenVersion }, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '10d' })
+        return sign({ userId, tokenVersion }, process.env.REFRESH_TOKEN_SECRET!, { expiresIn: '10d' })
+    }
+
+    public async revokeRefreshToken(user: User) {
+        user.tokenVersion += 1;
+        await user.save();
     }
 }
 

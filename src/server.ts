@@ -8,7 +8,7 @@ import cookieParser from "cookie-parser";
 
 export class ExpressApp {
   app: Application;
-  port: number = 4000;
+  port: number = parseInt(process.env.PORT!);
 
   /** 
    * Constructor
