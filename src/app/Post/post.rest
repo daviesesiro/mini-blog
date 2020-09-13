@@ -1,7 +1,0 @@
-POST http://localhost:3232/posts
-Content-Type: application/json
-
-{
-    "title": "first post",
-    "content":"hello"
-}

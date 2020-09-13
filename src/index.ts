@@ -9,4 +9,4 @@ import Controllers from "./controllers";
  */
 const server = new ExpressApp(Controllers);
 
-server.listen(3202);
+server.listen();
