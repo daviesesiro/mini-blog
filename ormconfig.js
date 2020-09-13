@@ -7,6 +7,6 @@ module.exports = {
   database: process.env.DB_NAME,
   synchronize: process.env.DB_SYNC,
   logging: process.env.ORM_LOGGING,
-  entities: ["src/**/*.entity.{js,ts}"],
+  entities: ["dist/**/*.entity.js"],
   subscribers: ["src/subscriber/**/*.ts"],
 };

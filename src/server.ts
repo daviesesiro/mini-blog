@@ -67,6 +67,7 @@ export class ExpressApp {
 
   public async inititializeDatabase() {
     await createConnection();
+    console.log('server started')
   }
 
   /**
